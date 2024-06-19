@@ -23,11 +23,14 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MimeTypes
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import com.example.exoplayer.databinding.ActivityPlayerBinding
 
-/**
+@UnstableApi /**
  * A fullscreen activity to play audio or video streams.
  */
 class PlayerActivity : AppCompatActivity() {
@@ -77,15 +80,23 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun initializePlayer() {
+        val trackSelector = DefaultTrackSelector(this).apply {
+            setParameters(buildUponParameters().setMaxVideoSizeSd())
+        }
         // ExoPlayer implements the Player interface
         player = ExoPlayer.Builder(this)
+            .setTrackSelector(trackSelector)
             .build()
             .also { exoPlayer ->
                 viewBinding.videoView.player = exoPlayer
 
-                val mediaItem = MediaItem.fromUri(getString(R.string.media_url_mp4))
-                val secondMediaItem = MediaItem.fromUri(getString(R.string.media_url_mp3))
-                exoPlayer.setMediaItems(listOf(mediaItem, secondMediaItem), mediaItemIndex, playbackPosition)
+                val mediaItem = MediaItem.Builder()
+                    .setUri(getString(R.string.media_url_dash))
+                    .setMimeType(MimeTypes.APPLICATION_MPD)
+                    .build()
+
+                exoPlayer.setMediaItem(mediaItem)
+
                 exoPlayer.playWhenReady = playWhenReady
                 exoPlayer.prepare()
             }
