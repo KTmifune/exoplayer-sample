@@ -17,13 +17,11 @@ package com.example.exoplayer
 
 import android.os.Build
 import android.os.Bundle
-import android.view.inspector.WindowInspector
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.media3.common.MediaItem
-import androidx.media3.common.util.Util
 import androidx.media3.exoplayer.ExoPlayer
 import com.example.exoplayer.databinding.ActivityPlayerBinding
 
@@ -36,8 +34,10 @@ class PlayerActivity : AppCompatActivity() {
 
     // 再生/一時停止状態（true:再生中/false:一時停止）
     private var playWhenReady = true
+
     // 現在のメディアアイテムインデックス
     private var currentItem = 0
+
     // 現在の再生位置
     private var playbackPosition = 0L
 
@@ -73,6 +73,7 @@ class PlayerActivity : AppCompatActivity() {
             releasePlayer()
         }
     }
+
     override fun onStop() {
         super.onStop()
         if (Build.VERSION.SDK_INT > 23) {
@@ -87,12 +88,13 @@ class PlayerActivity : AppCompatActivity() {
         player = ExoPlayer.Builder(this).build()
             .also { exoPlayer ->
                 viewBinding.videoView.player = exoPlayer
-                val mediaItem = MediaItem.fromUri(getString(R.string.media_url_mp4))
-                exoPlayer.setMediaItem(mediaItem)
 
-                // 2つ目のメディアを登録
-                val secondMediaItem = MediaItem.fromUri(getString(R.string.media_url_mp3))
-                exoPlayer.addMediaItem(secondMediaItem)
+                val mediaItems = listOf(
+                    MediaItem.fromUri(getString(R.string.media_url_mp4)),
+                    MediaItem.fromUri(getString(R.string.media_url_mp3)),
+                    MediaItem.fromUri(getString(R.string.media_url_mp4)),
+                )
+                exoPlayer.setMediaItems(mediaItems)
 
                 // 再生/一時停止状態を設定
                 exoPlayer.playWhenReady = playWhenReady
@@ -124,14 +126,15 @@ class PlayerActivity : AppCompatActivity() {
      * システムUI（ステータスバーとナビゲーションバー） を非表示にする
      * ユーザーが画面の端からスワイプすると、システムバーが一時的に再表示される
      */
-    private fun hideSystemUi(){
+    private fun hideSystemUi() {
         //システムウィンドウ（ステータスバーやナビゲーションバー）がアプリのコンテンツ領域に侵入しないように設定
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        WindowInsetsControllerCompat(window,viewBinding.videoView).let {controller ->
+        WindowInsetsControllerCompat(window, viewBinding.videoView).let { controller ->
             // システムバーを非表示にします。
             controller.hide(WindowInsetsCompat.Type.systemBars())
             // システムバーの動作を、スワイプで一時的に表示する動作に設定します。
-            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            controller.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
     }
 }
