@@ -90,6 +90,10 @@ class PlayerActivity : AppCompatActivity() {
                 val mediaItem = MediaItem.fromUri(getString(R.string.media_url_mp4))
                 exoPlayer.setMediaItem(mediaItem)
 
+                // 2つ目のメディアを登録
+                val secondMediaItem = MediaItem.fromUri(getString(R.string.media_url_mp3))
+                exoPlayer.addMediaItem(secondMediaItem)
+
                 // 再生/一時停止状態を設定
                 exoPlayer.playWhenReady = playWhenReady
                 // 現在のメディアアイテムのインデックスと再生位置を設定
