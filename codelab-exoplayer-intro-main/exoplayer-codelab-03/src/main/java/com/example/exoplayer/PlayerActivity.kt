@@ -18,6 +18,7 @@ package com.example.exoplayer
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -32,6 +33,8 @@ import com.example.exoplayer.databinding.ActivityPlayerBinding
  * A fullscreen activity to play audio or video streams.
  */
 class PlayerActivity : AppCompatActivity() {
+
+    private val playbackStateListener: Player.Listener = playbackStateListener()
 
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         ActivityPlayerBinding.inflate(layoutInflater)
@@ -117,5 +120,22 @@ class PlayerActivity : AppCompatActivity() {
             controller.systemBarsBehavior =
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
+    }
+
+
+}
+
+private const val TAG = "PlayerActivity"
+
+private fun playbackStateListener() = object : Player.Listener {
+    override fun onPlaybackStateChanged(playbackState: Int) {
+        val stateString: String = when (playbackState) {
+            ExoPlayer.STATE_IDLE -> "ExoPlayer.STATE_IDLE      -"
+            ExoPlayer.STATE_BUFFERING -> "ExoPlayer.STATE_BUFFERING -"
+            ExoPlayer.STATE_READY -> "ExoPlayer.STATE_READY     -"
+            ExoPlayer.STATE_ENDED -> "ExoPlayer.STATE_ENDED     -"
+            else -> "UNKNOWN_STATE             -"
+        }
+        Log.d(TAG, "changed state to $stateString")
     }
 }
