@@ -97,6 +97,7 @@ class PlayerActivity : AppCompatActivity() {
                     .setMimeType(MimeTypes.APPLICATION_MPD)
                     .build()
                 exoPlayer.setMediaItems(listOf(mediaItem), mediaItemIndex, playbackPosition)
+                exoPlayer.addListener(playbackStateListener)
                 exoPlayer.playWhenReady = playWhenReady
                 exoPlayer.prepare()
             }
@@ -107,6 +108,7 @@ class PlayerActivity : AppCompatActivity() {
             playbackPosition = player.currentPosition
             mediaItemIndex = player.currentMediaItemIndex
             playWhenReady = player.playWhenReady
+            player.removeListener(playbackStateListener)
             player.release()
         }
         player = null
@@ -138,4 +140,6 @@ private fun playbackStateListener() = object : Player.Listener {
         }
         Log.d(TAG, "changed state to $stateString")
     }
+
+
 }
