@@ -28,7 +28,7 @@ android {
 
 dependencies {
     // Switch out the code lab step to jump to different points in the code lab
-    implementation project(':exoplayer-codelab-03')
+    implementation project(':exoplayer-codelab-04')
     implementation 'androidx.multidex:multidex:2.0.1'
 
 }
