@@ -1,2 +1,2 @@
 # exoplayer-intro
-exoplayer-introのコードラボで勉強
+exoplayer-introのサンプル
