@@ -1,3 +1,4 @@
 # exoplayer-intro
-exoplayer-introのサンプル
+exoplayer-introコードラボ
+
 https://developer.android.com/codelabs/exoplayer-intro?hl=ja#0
